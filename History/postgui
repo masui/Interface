@@ -56,10 +56,15 @@ GUIを改良しようという様々な試みが行なわれてきました。
 最初に開発されたズーミングインタフェースは
 New York UniversityのKen Perlinによる「Pad」システムですが、
 この後継としてBen Bedersonにより開発された「Pad++」や、
-「Jazz」「Piccolo」などのズーミングインタフェースツールキットが
+「Jazz」
+「<a href="http://www.cs.umd.edu/hcil/jazz/">Piccolo</a>」
+などのズーミングインタフェースツールキットが
 開発され、非常に期待されたことがあります。
 
-*** 画面 Jazz/Piccolo画面 ***
+<p>
+<img src="http://www.windsorinterfaces.com/images/photomesa4.jpg" width=400><br>
+「PhotoMesa」
+<p>
 
 % ズーミングとフィルタリングで何でもできる
 
