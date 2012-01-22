@@ -1,0 +1,424 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>title</title>
+<style type="text/css">
+<!--
+body {
+  background-color:#ddddff;
+}
+-->
+</style>
+</head>
+<body>
+
+<!--
+> JavaScriptベースの実世界GUIのフレームワークの解説と，
+> そのフレームワークで実現した制作事例という構成でお願いしたいです．
+-->
+
+<div style="width:500px;">
+
+<h1>Goldfish - JavaScriptベースの実世界GUIフレームワーク</h1>
+
+X月号の記事で、
+パソコン上のGUIのような操作を実世界で行なうことができるようにする
+「実世界GUI」の紹介をしました。
+最近のAndroidケータイに内蔵されているNFCリーダを利用して
+実世界GUIを実現する方法を実験しており、
+そのための枠組として「GoldFish」というシステムを作成しています。
+<p>
+
+
+「音量調整」と記述したタグに
+NFCケータイを近付けてから回転させることによりテレビの音量を調整したり、
+....たり
+することができます。
+
+PC上のGUIと同じような操作をスマートフォンで実現できるようになるわけです。
+
+スマートフォンに内蔵されたNFCリーダと動きセンサを利用することにより
+このような実世界GUIを実現することが可能になります。
+
+ * 実世界GUIの応用例
+
+<h2>Androidのインテント</h2>
+
+Androidにはプロセス間通信を行なうための「インテント」という便利な機能があります。
+インテントを利用すると、異なるアプリケーション間でデータを受け渡すことが簡単にできます。
+
+各アプリケーションは自分がどういうデータを受け取ることができるかを定義しています。
+
+撮影した写真を加工してメールで送りたいような場合、
+パソコンを利用する場合は
+まずデジカメで撮った写真ファイルを画像編集アプリケーションで読み出してから編集し、
+編集後のファイルをセーブしてから
+メーラの添付ファイルとして指定するといった面倒な手順が必要ですが、
+Androidの場合は
+写真撮影アプリケーションから画像編集アプリケーションをインテントとして呼び出し、
+画像編集アプリケーションからメールアプリケーションを呼び出すことができるので、
+画像ファイルをセーブしたりコピペしたりすることなく、
+写真撮影⇒加工⇒送信、という作業を連続して行なうことができるようになっています。
+
+AndroidケータイをNFCにタッチすると、
+NFCを読み取ったというインテントが生成され、
+それを処理可能なアプリケーションを選ぶことができます。
+NFCインテントを処理可能なアプリケーションが複数ある場合、
+デフォルトで起動されるアプリケーションを指定しておけば、
+自動的にそのアプリケーションが起動します。
+
+(図 指定のようす)
+
+音量調整を行なうアプリケーションを作成しておき、
+NFCインテントを受け取ったらそのアプリケーションが起動するように指定しておけば
+タグに触れたらすぐに音量調整することができるようになります。
+
+NFCの種類に応じて様々なアプリケーションを起動させたい場合、
+NFCデータにもとづいてアプリケーションを振り分ける必要がありますが、
+様々なアプリケーションをAndroidに入れておくことは現実的ではないでしょう。
+
+様々な場所で使えるようにするためには、
+読んだNFCデータに応じて異なる動きをさせる必要があります。
+
+また、NFCに対応したアプリケーションをいちいちAndroidにインストールするのは
+大変です。
+
+インテントで起動するアプリが沢山あると不便なので、
+ひとつのアプリケーションで様々な実世界GUIに対応できるようにしたいものです。
+
+このような問題を解決するため、以下のようなプラットフォームを作っています。
+
+  NFCを読むとブラウザが立ち上がり、IDに応じたURLにジャンプする
+  そのとき、JSからセンサが使えるように初期化しておく
+  ジャンプするURLはWeb上で設定可能にする
+  アプリは全部JSで書く
+
+このように、アプリケーションをブラウザ上のJavaScriptで動かすという
+方法を利用すると、NFCに対応したアプリケーションは
+Web上のJavascriptで記述しておけばよいので
+Androidにアプリケーションをインストールする必要がありません。
+
+また、NFCのIDをもとに実際のURLへの変換テーブルを利用すれば、
+任意のWebページを利用することができます。
+
+<h3>GoldFishの構成</h3>
+
+Goldfishは以下の要素から構成されています。
+
+ - NFCインテントを読み取ってブラウザを呼び出すAndroidアプリケーション
+   これは以下のubif.orgにアクセスします。
+ - Goldfishブラウザがアクセスするサーバ
+   変換テーブルを用意します
+
+以下に説明します。
+
+<h4>Androidアプリケーション「GoldNFC」</h4>
+
+GoldfishのAndroidアプリケーションは、
+NFCのインテントを受け取ったときに呼び出され、
+UBIF.org/ID.html を指定してブラウザ(WebView)を開きます。
+
+ブラウザの中でAndroidのセンサを利用できるようにするため、
+初期化を行います。
+
+<h4>Webサイト「ubif.org」</h4>
+
+GoldNFCは
+WebViewブラウザを開いた後、
+ubif.org/IDにアクセスし、
+そのIDに定義されている外部ページに移動します。
+
+bit.lyや*.coのように、
+長いURLを短くしてくれる短縮IDサービスが近年よく利用されていますが、
+これと同じ方法を利用することによって
+ubif.org/zzzzzからXXXXXXのようなURLへの移動を実現しています。
+ubif.orgではこれと同じ仕組みを利用し、
+ubif.org/xxxxのようなURLから
+XXXXXXのようなURLにジャンプさせることができます。
+たとえば、Androidのセンサを利用するJavaScriptプログラムを
+http://example.com/android というページに記述しておき、
+NFCのxxxxというIDをhttp://example.com/androidに対応させておけば、
+AndroidでNFCにタッチしたとき
+ubif.org経由で
+ブラウザはhttp://example.com/androidのページを読み込み、
+そこに記述されているHTMLやJavaScriptがロードされてAndroidのブラウザ上で表示/実行されることになります。
+
+<h2>GoldFishを利用した実世界GUIシステムの実例</h2>
+
+GoldNFCを搭載したAndroidをNFCタグに近付けると
+ブラウザが起動して
+http://UBIF.org/(NFCのID)
+にアクセスします。
+http://UBIF.org/(NFCのID)
+へのアクセスは、ubif.orgにおいてそのIDに登録されている
+URLにリダイレクトされます。
+
+たとえば
+UBIF.orgにおいて
+ID=xxxx => http://example.com/ という対応を登録しておけば、
+xxxxというIDをもつNFCタグにタッチすると
+example.comの内容が
+標示されます。
+そのページにJavaScriptプログラムが記述されている場合は
+それが実行されます。
+
+<h3>時計の表示</h3>
+
+NFCタグを貼った柵の上にNFCケータイを置くだけで
+NFCケータイに時計を表示させることができます。
+
+まず、以下のように時計を表示するWebページを作成し、
+普通のページとして用意して普通のパソコンのブラウザで動作を確認しておきます。
+
+http://pitecan.com/GF/clock.html
+http://gyazo.com/7b7bc940725dc7055eebe0eeadb0e027
+
+<pre>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;デジタル時計&lt;/title&gt;
+    &lt;style type="text/css"&gt;
+    body {
+      margin: 0;
+    }
+    div {
+      background-color: #eee;
+      font-weight: bold;
+      font-size: 25px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      padding: 30px 0 30px 0;
+    }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;div id="clock"&gt;&lt;/div&gt;
+    &lt;script type="text/javascript"&gt;
+    function tick() {
+      now = new Date();
+      clock = document.getElementById('clock');
+      clock.innerHTML = now.toLocaleString();
+      window.setTimeout("tick()", 1000);
+    }
+    tick();
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+次に、NFCタグまたはSuicaを用意し、
+タグのIDとこのページのURLの関連をUBIF.orgで登録しておきます。
+
+たとえばタグのIDが「1E0A7EEC」である場合、
+以下のようにタグとURLの関連を定義しておきます。
+http://gyazo.com/2d1453229edb06cd9bda5d57ba41b68a
+
+MifareタグとAndroid
+http://gyazo.com/053614498ebc676ff0713590a56127d6
+
+Androidでタッチした後の状態
+http://gyazo.com/3e4387c59d571e4a0d06c40382264889
+
+<h3>円板GUI</h3>
+
+上の例ではタッチした後で操作は行ないませんでしたが、
+AndroidをNFCにタッチした後で回転することによって
+音量ツマミのようなGUIを実現する例を示します。
+
+以下のようなHTMLとJavaScriptをもつWebページを用意し、ubif.org上で
+NFCタグのIDとの対応を定義しておきます。
+
+goldfish.jsはセンサを利用するための初期設定をするスクリプトで、
+これによって
+    gyro = goldfish.gyroscope();
+のようにしてジャイロのようなセンサを利用できるようになります。
+
+http://pitecan.com/GF/clock.html
+
+<pre>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+    &lt;title&gt;ダイヤルGUI&lt;/title&gt;
+    &lt;style type="text/css"&gt;
+    body {
+      backgound-color: #eee;
+    }
+    &lt;/style&gt;
+    &lt;script src='goldfish.js' type='application/javascript'&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;canvas id="canvas" style="width:320px;height:400px;"&gt;&lt;/canvas&gt;
+    &lt;script type="text/javascript"&gt;
+    var radius = 80;
+    function drawCircle(x,y,radius){
+      canvas = document.getElementById('canvas');
+      canvas.width = x * 2;
+      canvas.height = y * 2;
+      ctx = canvas.getContext('2d');
+      ctx.beginPath();
+      ctx.fillStyle = 'rgb(40,40,40)';
+      ctx.arc(x, y, radius, 0, Math.PI*2, true);
+      ctx.fill();
+    }
+    setInterval(
+      function(){
+        gyro = goldfish.gyroscope();
+        radius -= (gyro.z * 2);
+        if(radius &gt; 160) radius = 160;
+        if(radius &lt; 1) radius = 1;
+        drawCircle(160,200,radius);
+      }, 50
+    );
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+このプログラムではsetInterval()によって
+50msごとにジャイロをチェックするスクリプトが動くようになっており、
+ケータイの水平回転角を取得することができます。
+その値によって直径を変化させた円を描くことにより、
+回転に従って円の大きさが変わるGUIを実現できます。
+
+http://gyazo.com/84a0956a0ada3e5d37271366e99bdd2b
+http://gyazo.com/2955e25fcabac72d2d2b2586f5ed8a37
+http://gyazo.com/6c188476cda6899af87fca20fd18e40b
+
+これを利用してオフィスのドアを開閉するシステムを利用しています。
+
+(図)
+
+大学の研究室の電子錠ドアを GoldFish で開閉する システムを実装した。
+(図:3)Android アプリケーショ ン側の実装は、プログラムの基礎は学んだもの
+のあま り書いたことのない大学 3 年生でも 6 時間ほどで実装 できた。研究
+室の電子錠ドアに貼ってある NFC タグに An- droid 端末で触り、ドアノブを
+ひねるような動きで An- droid 端末を回転させるとドアの鍵が開くアプリケー
+ションである。JavaScript40 行程度で書かれた Gold- Fish アプリケーション
+は、10 ミリ秒毎にジャイロス コープを監視して角度が合計 90 度まわされる
+と Ajax でドアサーバーに開閉のリクエストを送る。ドアサー バーは
+Phidgets サーボモーターと Ruby の Sinatra アプリケーションで実装されて
+おり、HTTP-POSTを受信するとドアの鍵を回して開け、5 秒後に閉める。 筆者
+らは日常的にこの仕組みを使っている。
+
+
+
+例えば、
+音量調節をしたい場合は、
+Androidからマシンに接続して音量調節を行なう必要があります。
+
+<h3>実世界コピペ</h3>
+
+GoldFishアプリケーションの例として、実世界コピペを実装した。コンピュー
+タ同士の間でAndroidを用いてコピーアンドペーストができるアプリケーショ
+ンである。あらかじめコンピュータにNFCタグを貼り付けておき、そこに
+Android端末で触れると金魚掬いの画面が表示される。(図:1)この画面で
+Android端末を右に掬うと、現在最前面に表示しているwebページが
+Androidにコピーされる。別のコンピュータに触れてから左に流し込むとペー
+ストが行われる。
+
+実世界コピペの実装では、GoldFishアプリケーションは各コンピュータと直
+接通信していない。GoldFishアプリケーションおよび各コンピュータはインター
+ネット上のクリップボードサーバーと通信する。各コンピュータにはクリップ
+ボードクライアントがインストールされていて、それぞれ貼り付けられた
+NFCタグのIDが実行時引数に与えられている。クリップボードサーバーは
+サーバーアプリケーションにRubyのSinatraとEventMachineを、データス
+トアにMem-Cachedを使用して実装した。クリップボードクライアントは
+webブラウザ用をGoogleChromeExtensionで、Mac用アプリケーションを
+JRubyでそれぞれ実装した。
+
+Android上で動作するGoldFishアプリケーションは、JavaScriptの
+setInterval()とgoldfish.accelerometer()関数を用いて10ミリ秒毎に加速度
+センサーを監視する。1G以上の加速度が100ミリ秒以上連続で左右どちら
+にかかったかによって、ユーザーがAndroid端末をコピーとペーストどちら
+にジェスチャ入力したかを判別する。ジェスチャ入力値と端末IDとNFCタ
+グのIDはAjaxでクリップボードサーバーに送信される。goldfish.id関
+数、goldfish.tag関数がそれぞれ端末IDとNFCタグのID取得に使える。
+
+各コンピュータにインストールされたクリップボードクライアントは、
+cometを用いてクリップボードサーバーから通信があるまで待機する。URLが
+送られてきた時はwebページを開き、またコピー命令が送られてきた時は現在
+開いているURLを返信する。実世界コピペを使うと、これまでコンピュータ間
+での通信では機器同士が隣にあるにも関わらずデータ送信先の名前を入力し
+たりアイコンをクリックしたりしていた操作を、直接指示でデータ送信できる
+ようになる。他にもプリンターにデータを送信するのではなく、データを手
+で掴んで投げ込むと印刷されるといった理解しやすいユーザインタフェースが
+実装できる。
+
+<h2>GoldFishの実装</h2>
+
+<h3>GoldNFC</h3>
+
+GoldNFCはAndroidのプログラムで、
+NFCインテントを受け取ってIDを読み取った後、
+センサを利用できるようにしたWebViewのセットアップを行ない、
+http://ubif.org/ID というアドレスにアクセスするプログラムです。
+GoldNFCはAndroid Marketで公開されており、
+ソースは
+http://github.com/shokai/Goldfish
+で公開しています。
+
+(GoldNFCの解説)
+
+GoldFishでは、アプリケーションの実装にAndroidネイティブのJavaでは
+なくJavaScriptを採用している。Javaはプログラム言語自体が複雑で難し
+く、またセンサーの値を監視しつつ画面を更新しつつ通信も行うなどの並行
+処理の記述がシンプルに記述できない。JavaScriptはシンプルなプログラム
+言語で、初心者にもよく薦められている。そして関数がファーストクラスオ
+ブジェクトなのでタイマーとコールバックを用いた並行処理の記述も容易であ
+る。
+
+GoldFishはJavaで実装したネイティブアプリに、WebViewコンポーネント
+でwebページを表示している。WebView内のJavaScriptとAndroidネイティ
+ブのJavaが通信する事で、JavaScriptからセンサーなどの機能を呼び出せ
+る。
+GoldFishはNFCタグを読んだ際に、あらかじめタグに対して登録されている
+URLを読み込み、WebViewに表示する。NFCタグはGoldFishのwebサイ
+トで登録できる。(図:2)
+
+図 2
+NFC タグ登録画面 http://ubif.org/goldfish/tag
+
+
+<h3>UBIF.org</h3>
+
+GoldNFCはUBIF.orgのhttp://ubif.org/(ID) にアクセスするので、
+定義に従ってそれをリダイレクトします。
+IDを含むURLへのアクセスがあったとき、
+moved permanentlyというステータスを返すことにより
+これを実現しています。
+
+<h2>GoldFishで何ができるか</h2>
+
+今回は簡単な例だけ紹介しましたが、
+GoldFishの応用はかなり広いと思われます。
+
+最近の電子レンジは
+
+
+<h2>GoldFishの利点</h2>
+
+JavaScriptなので誰でもすぐに仕様変更もできる
+
+
+
+
+GoldFish を使うことで実世界 GUI アプリケーショ ンを簡単に実装できる。
+GoldFish アプリケーション は JavaScript で記述する事ができ、また操作対
+象の 指定、ジェスチャーや GUI による操作、ユーザーとコ ンテキストの判別、
+他のシステムとの通信を簡潔に記 述できる機能が JavaScript の関数として実
+装されて いる。アプリケーションの配布も web 上にアップロー ドし URL を
+タグと関連付けるだけで完了するため、 各端末にインストールしなおす必要が
+ない。GoldFish によって実世界 GUI アプリケーションの開発の敷居 が下がっ
+たので、プログラミング初心者でも短時間で アプリケーションを実装する事が
+できた。
+
+
+
+</div>
+
+</body>
+</html>
+
+

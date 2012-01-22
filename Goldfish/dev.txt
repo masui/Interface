@@ -1,0 +1,39 @@
+しくみは[[GoldFishとは]]に書いた
+問題点
+ アプリがバックグラウンドで生きている、センサーの値とか送りまくってる
+ crossdomain ajaxできない
+ センサ沢山使うと遅い
+ タグの上で動かしてると同じアプリが何個も起動されてしまう
+ 画面回転できない
+[[[実装予定の機能とtodo]]]
+ センサの名前空間の整理と、[[http://d.hatena.ne.jp/myatsmoto/20111013/1318492579 defineGetter]]などを使う
+ webviewのリロード
+ 縦置き/横置きをJSから切り替えれるようにする
+  これでできるけど無理っぽい
+   context.getResources().getConfiguration().screenLayout = Configuration.ORIENTATION_LANDSCAPE;
+  既にlandscapeのactivityでlandscapeにすると固定できる
+  これでportrait←→landscapeを切り替えると、activityが再生成される
+   Androidは画面回転させるとonDestroyイベント→onCreateイベントの順にイベントが発生して画面がまるごと描画しなおされてしまう
+   js→javaでこれやると、activityがbackして前に戻ってしまう
+  普通はActivity起動前にAndroidManifest.xmlを読み込んで設定する内容らしい
+   AndroidManifest的なものを作る必要がある
+   NFC読む→TagActivity起動、HTTPでTag-URL関連付けページ読んでGynamicManifest読み込む→PortlaitAppActivityとLandscapeAppActivityにそれぞれ分岐
+ クロスドメインHTTPリクエスト
+  JavaのhttpクライアントをJSから呼び出せるようにする
+  jQuery.ajax() 風に使えるようにしたい
+   callbackをどうしようかな
+   callした時のunixtimeをkeyにした関数のhashをgynamic.jsで管理して、onSuccessとonErrorを呼び出す
+ JSからIntentの呼び出し
+  gynamic.intent
+ ネイティブsocket client
+  var sock = gynamic.socket.connect(host, port) して sock.send("string")する
+  受信はcallback function登録
+ 音を鳴らす
+  もしかしてJSだけで鳴るかもしれない
+[[[実装完了した機能]]]
+ 名前をgoldfish（org.ubif.goldfish）に変える
+  変えた
+  サーバーも [[http://ubif.org/goldfish]] に移動した
+ activeでないwebviewを止める
+  webviewがバックグラウンドで生きていてセンサーも読み取れてしまっているのでヤバイ
+  Activity.onStop等のイベントでAcitivityを終了させたい
