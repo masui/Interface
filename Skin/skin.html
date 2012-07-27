@@ -12,8 +12,7 @@
 タッチパネルのついた機器をを持ち歩く必要があります。
 何も持ち歩かなくても様々なタッチ操作を行なうことができれば便利でしょう。
 
-<p>
-皮膚の電気的特性を利用したシステムは従来から様々なものが用いられていますが、
+<!-- 皮膚の電気的特性を利用したシステムは従来から様々なものが用いられていますが、-->
 人体を通信媒体として利用する「人体通信」や、
 自分の皮膚をタッチパネルのように利用するシステムが最近注目を集めています。
 
@@ -41,9 +40,6 @@ Suicaのようなカードを利用することなく
 何かに触れることによって情報を取得して拡張現実感(AR)のような使い方をしたり、
 さわったものを記録してライフログのような使い方ができるかもしれません。
 
-このように人体通信には様々な可能性がありますが、
-2012年現在、実際に活用はされていないようです。
-
 <!--
 http://www.kddi.com/business/oyakudachi/square/labo/004/index.html
 KDDIの人体通信
@@ -58,11 +54,11 @@ KDDIの人体通信
 
 <h3>Skinput</h3>
 
-カーネギーメロン大学のChris Harrisonは、
+カーネギーメロン大学のChris Harrison氏は、
 腕や手を別の手の指でタップしたときの音を認識することにより
 どこの部位がタップされたかを高精度で認識し、
 メニュー操作などのコンピュータインタラクションを実現する
-Skinputというシステムを提案しています。
+Skinputというシステムを提案しています[2]。
 
 指で皮膚をタップすると、
 タップの強さや場所に応じて
@@ -72,7 +68,7 @@ Skinputというシステムを提案しています。
 
 直接腕の表面を伝わる横波と、一度骨の中に入ってから骨の外に出る縦波
 という2種類の波を解析することにより、
-タップされた位置をある程度正確に知ることができるというのが原理です。
+タップされた位置をある程度正確に知ることができます。
 
 <p>
 <img src="http://gyazo.com/5b37922ca6dd89191fcc3d94f20c0ae4.png">
@@ -102,7 +98,7 @@ http://www.chrisharrison.net/index.php/Research/TapSense/
 
 東大の中妻啓氏と慶應義塾大学の牧野泰才氏は、
 左手の甲を右手の指でタップしたときの振動と音を検出することによって
-左手の甲をタッチパッドのように利用するシステムを提案しています。
+左手の甲をタッチパッドのように利用するシステムを提案しています[3]。
 
 腕時計のような装置にセンサが組み込んであり、
 赤外線の反射で指の位置を検出したり、
@@ -135,7 +131,6 @@ Touchéでは
 Swept Frequency Capacitive Sensing
 (SFCS: 広範囲の周波数帯での静電容量計測)という技術を利用することにより、
 様々なジェスチャを認識することができます。
-Touchéシステムは
 1KHzから3.5MHzまでの周波数の信号を17.5KHzステップでスイープ出力し、
 各周波数における減衰のエンベロープを測定することによって
 どのような状態でタッチが行なわれているかを検出します。
@@ -144,6 +139,7 @@ Touchéシステムは
 ドアノブをどのように握るかによって異なるインタラクションを提供することが
 可能になっています。
 
+<!--
 > TouchéはSwept Frequency Capacitive Sensing (SFCS: 広範囲の周波数帯での
 > 静電容量計測)を行うことで、ほぼすべての物体でジェスチャ入力を可能とする
 > センシング技術です。従来の静電容量タッチセンサでは、指が触れているかい
@@ -156,6 +152,7 @@ Touchéシステムは
 > 人体そのものもタッチインタラクティブにすることが出来ます。本論文では、
 > 5種類の条件でのインタラクションを提案しており、99%以上の精度でジェス
 > チャーを判別可能であることも示しています。
+-->
 
 <p>
 <img src="http://gyazo.com/78dec99beeba7f509f4e9e6bfdcfd90a.png" width=400>
@@ -171,10 +168,10 @@ Touchéシステムは
 本当に何も体に装着する必要がなくなるはずです。
 
 常にONになっているセンサや計算機を体に「着て」使うという
-「ウェアラブルコンピューティング」というものが一時話題になりましたが、
+「ウェアラブルコンピューティング」が一時話題になりましたが、
 計算機を身につけるのではなく体に埋め込んでしまおうという
 「インプラントコンピューティング」を考えている人もいます。
-体の中に機械を埋め込むなんてとんでもないと思う人が現在は多数派だと思われますが、
+体の中に機械を埋め込むのは嫌だと思う人が現在は多数派だと思われますが、
 ペースメーカを埋め込んで生活している人もいるわけですし、
 本当に便利になるのであれば
 RFIDなどを体内に埋め込んで使うことを選択する人もいるかもしれません。
@@ -186,7 +183,7 @@ http://www.christianholz.net/implanted_user_interfaces.html
 AutoDeskのChristian Holz氏らは、
 腕に埋め込んで利用するためのデバイスを試作し、
 それによってどのようなインタラクションが可能になるかの実験を行なっています[5]。
-まだ自分の腕に埋め込む度胸は無いらしく、
+まだ自分の腕に埋め込むには到っておらず、
 人造皮膚を使った実験しか行なっていないようですが、
 様々な可能性が示されています。
 
@@ -194,25 +191,29 @@ AutoDeskのChristian Holz氏らは、
 <img src="http://gyazo.com/85cd094e32b67214a4b75c9a00b38327.png">
 <p>
 
-<hr>
-誰がどこで何をどのように触ったのかを何気なく検出できるようになると
+装置を利用することなく、
+誰がどこで何をどのように触ったかという情報を得ることができるようになれば、
+今までに無かった形の様々なユビキタスコンピューティングが可能になるかもしれません。
+人体を利用した通信や入力の今後の研究に期待したいと思います。
 
+<p>
 <hr>
-参考文献
+<p>
+<h3>参考文献</h3>
 <br>
-[1] T. G. Zimmerman, Personal Area Networks (PAN): Near-Field
-Intra-Body Communication, M.S. thesis, MIT Media Laboratory, 1995.
-
 [1] Zimmerman, T.G., Smith, J.R., Paradiso, J.A., Allport, D.,
 Gershenfeld, N., Applying electric field sensing to human-computer
 interfaces. in Proceedings of CHI '95, pp. 280-287.
-
+<br>
+[2] Harrison, C., Tan, D. Morris, D. Skinput: Appropriating the
+Body as an Input Surface. In Proceedings of CHI'10, pp. 453-462.
+<br>
 [3] http://www.alab.t.u-tokyo.ac.jp/~shinolab/projects/touchinterfaceonbackofhand/
-
+<br>
 [4] Sato, M., Poupyrev, I, and Harrison, C. Touché: Enhancing Touch
 Interaction on Humans, Screens, Liquids, and Everyday Objects. In
 Proceedings of CHI'12. 2012.
-
+<br>
 [5] Christian Holz, Tovi Grossman, George Fitzmaurice, Anne
 Agur. Implanted User Interfaces. In Proceedings of CHI'12.
 pp. 503–512.
