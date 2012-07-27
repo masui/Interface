@@ -15,19 +15,14 @@
 <p>
 皮膚の電気的特性を利用したシステムは従来から様々なものが用いられていますが、
 人体を通信媒体として利用する「人体通信」や、
-自分の皮膚をタッチパネルのように利用するシステムが最近注目をあびています。
+自分の皮膚をタッチパネルのように利用するシステムが最近注目を集めています。
 
 <!-- 人体を通信媒体として使ったり入力装置として使ったりする研究が流行してきています。 -->
 
 <h2>人体通信</h2>
 
-<!--
-通信デバイス/入力デバイスとして利用するアイデアは新しいものではありません。
-タッチセンサ
--->
-
 人体を通信媒体として利用する
-「人体通信」(PAN: Personal Area Network)は
+「人体通信」(PAN: Personal Area Network)が
 1995年ごろから注目されはじめました[1]。
 
 人体通信とは、人間の手や腕で何かに触れたとき、手や腕の電流または電界を利用して
@@ -46,49 +41,127 @@ Suicaのようなカードを利用することなく
 何かに触れることによって情報を取得して拡張現実感(AR)のような使い方をしたり、
 さわったものを記録してライフログのような使い方ができるかもしれません。
 
+このように人体通信には様々な可能性がありますが、
+2012年現在、実際に活用はされていないようです。
+
 <!--
 http://www.kddi.com/business/oyakudachi/square/labo/004/index.html
 KDDIの人体通信
 -->
 <h2>体表を入力装置として利用する</h2>
 
-----
-TapSense (C. Harrison)
-This is achieved by segmenting and classifying sounds resulting from a finger’s impact. 
-http://www.chrisharrison.net/index.php/Research/TapSense/
+体表を通信媒体として利用するだけではなく、
+体表をタッチパネルのような入力装置として利用することができれば
+タブレット装置を持ち歩く必要がなくなるはずです。
+体表を入力装置にするというのは奇抜な考え方ですが、
+そのような手法の研究が近年盛んになってきています。
 
-----
-手の甲インタフェース
-http://www.alab.t.u-tokyo.ac.jp/~shinolab/projects/touchinterfaceonbackofhand/
-http://www.alab.t.u-tokyo.ac.jp/~shinolab/wordpress/wordpress/wp-content/uploads/2011/06/SIGGRAPH2011ETechWristBand.jpg
+<h3>Skinput</h3>
 
-赤外線の反射で指の位置を検出
-手をタップする振動をピエゾで検出したり
-指でこする音を検出したりする
+カーネギーメロン大学のChris Harrisonは、
+腕や手を別の手の指でタップしたときの音を認識することにより
+どこの部位がタップされたかを高精度で認識し、
+メニュー操作などのコンピュータインタラクションを実現する
+Skinputというシステムを提案しています。
 
-----
+指で皮膚をタップすると、
+タップの強さや場所に応じて
+波紋のように伝達する横波が発生します。
+また、タップのエネルギーの一部は縦波として骨に向かって伝達されて骨の周囲の組織を揺らし、
+新たな縦波が生成されます。
+
+直接腕の表面を伝わる横波と、一度骨の中に入ってから骨の外に出る縦波
+という2種類の波を解析することにより、
+タップされた位置をある程度正確に知ることができるというのが原理です。
+
+<p>
+<img src="http://gyazo.com/5b37922ca6dd89191fcc3d94f20c0ae4.png">
+<p>
+
+上図はSkinputを使ってメニュー操作を行なっているところです。
+上腕部に取り付けられたセンサでタップ位置を取得し、
+小型プロジェクタで画像を投影することにより
+腕タップでメニューを利用できるようになっています。
+
+<!--
 http://www.chrisharrison.net/index.php/Research/Skinput
 Skinput: Appropriating the Body as an Input Surface
 LunarModule氏の解説
 http://blog.livedoor.jp/lunarmodule7/archives/981829.html
+-->
 
-----
+<!--
+<h3>TapSense</h3>
+
+TapSense (C. Harrison)
+This is achieved by segmenting and classifying sounds resulting from a finger’s impact. 
+http://www.chrisharrison.net/index.php/Research/TapSense/
+-->
+
+<h3>手の甲インタフェース</h3>
+
+東大の中妻啓氏と慶應義塾大学の牧野泰才氏は、
+左手の甲を右手の指でタップしたときの振動と音を検出することによって
+左手の甲をタッチパッドのように利用するシステムを提案しています。
+
+腕時計のような装置にセンサが組み込んであり、
+赤外線の反射で指の位置を検出したり、
+手をタップする振動をピエゾ素子で検出したり、
+手の甲を指でこする音を検出して操作を区別したり
+することができます。
+
+<p>
+<img src="http://www.alab.t.u-tokyo.ac.jp/~shinolab/wordpress/wordpress/wp-content/uploads/2011/06/SIGGRAPH2011ETechWristBand.jpg" width=400">
+<p>
+
+<h3>Touché</h3>
+
+<!--
 http://www.satomunehiko.com/?page_id=850
 Touché: Enhancing Touch Interaction on Humans, Liquids, and Everyday Objects
 http://masui.sfc.keio.ac.jp/2c644ed4d479d2fc320a0619800144ae.pdf
 
-TouchéはSwept Frequency Capacitive Sensing (SFCS: 広範囲の周波数帯での
-静電容量計測)を行うことで、ほぼすべての物体でジェスチャ入力を可能とする
-センシング技術です。従来の静電容量タッチセンサでは、指が触れているかい
-ないかの2種類の状態しか分かりませんが、SFCSを用いることで、ドアノブを一
-本の指で触れている・二本の指でつまんでいる、握っている、触れずに手をか
-ざしている、といった複雑なタッチジェスチャを非常に高精度で検出すること
-が可能となります。導電性のある物体であればセンサから一本のワイヤーを取
-り付けるだけでどんなものでもジェスチャ検出が可能となります。そのため、
-タッチスクリーン上でのインタラクションに限らず、ドアノブや水などの液体、
-人体そのものもタッチインタラクティブにすることが出来ます。本論文では、
-5種類の条件でのインタラクションを提案しており、99%以上の精度でジェス
-チャーを判別可能であることも示しています。
+> こちらのページにある図は、出典を記載頂ければご利用頂いて問題ありません。
+> http://www.disneyresearch.com/research/projects/hci_touche_drp.htm
+> どうぞよろしくお願い致します。
+-->
+
+東大の佐藤宗彦氏は、様々なタッチ操作を検出することができる
+「Touché」というセンサ技術を提案しています[4]。
+
+普通の静電容量型タッチセンサでは、
+指が触れているかいないかの2種類の状態を区別することしかできませんが、
+Touchéでは
+Swept Frequency Capacitive Sensing
+(SFCS: 広範囲の周波数帯での静電容量計測)という技術を利用することにより、
+様々なジェスチャを認識することができます。
+Touchéシステムは
+1KHzから3.5MHzまでの周波数の信号を17.5KHzステップでスイープ出力し、
+各周波数における減衰のエンベロープを測定することによって
+どのような状態でタッチが行なわれているかを検出します。
+たとえば、ドアノブを1本の指で触れている/2本の指でつまんでいる/握っている/
+触れずに手をかざしている、といった状態を区別することが可能なので、
+ドアノブをどのように握るかによって異なるインタラクションを提供することが
+可能になっています。
+
+> TouchéはSwept Frequency Capacitive Sensing (SFCS: 広範囲の周波数帯での
+> 静電容量計測)を行うことで、ほぼすべての物体でジェスチャ入力を可能とする
+> センシング技術です。従来の静電容量タッチセンサでは、指が触れているかい
+> ないかの2種類の状態しか分かりませんが、SFCSを用いることで、ドアノブを一
+> 本の指で触れている・二本の指でつまんでいる、握っている、触れずに手をか
+> ざしている、といった複雑なタッチジェスチャを非常に高精度で検出すること
+> が可能となります。導電性のある物体であればセンサから一本のワイヤーを取
+> り付けるだけでどんなものでもジェスチャ検出が可能となります。そのため、
+> タッチスクリーン上でのインタラクションに限らず、ドアノブや水などの液体、
+> 人体そのものもタッチインタラクティブにすることが出来ます。本論文では、
+> 5種類の条件でのインタラクションを提案しており、99%以上の精度でジェス
+> チャーを判別可能であることも示しています。
+
+<p>
+<img src="http://gyazo.com/78dec99beeba7f509f4e9e6bfdcfd90a.png" width=400>
+<br>
+<img src="http://www.disneyresearch.com/research/projects/Touche/touche-diagram-large.jpg" width=400>
+<p>
 
 <h2>体に装置を埋め込む</h2>
 
@@ -102,21 +175,27 @@ TouchéはSwept Frequency Capacitive Sensing (SFCS: 広範囲の周波数帯で�
 計算機を身につけるのではなく体に埋め込んでしまおうという
 「インプラントコンピューティング」を考えている人もいます。
 体の中に機械を埋め込むなんてとんでもないと思う人が現在は多数派だと思われますが、
+ペースメーカを埋め込んで生活している人もいるわけですし、
+本当に便利になるのであれば
+RFIDなどを体内に埋め込んで使うことを選択する人もいるかもしれません。
 
-
-
-
-究極はインプラント
+<p>
+<!--
 http://www.christianholz.net/implanted_user_interfaces.html
-本当にインプラントした人もいたが
+-->
+AutoDeskのChristian Holz氏らは、
+腕に埋め込んで利用するためのデバイスを試作し、
+それによってどのようなインタラクションが可能になるかの実験を行なっています[5]。
+まだ自分の腕に埋め込む度胸は無いらしく、
+人造皮膚を使った実験しか行なっていないようですが、
+様々な可能性が示されています。
 
-
-Augmented Human
+<p>
+<img src="http://gyazo.com/85cd094e32b67214a4b75c9a00b38327.png">
+<p>
 
 <hr>
-誰が何をどのように触ったのか検出できると面白い
-
-
+誰がどこで何をどのように触ったのかを何気なく検出できるようになると
 
 <hr>
 参考文献
@@ -126,7 +205,17 @@ Intra-Body Communication, M.S. thesis, MIT Media Laboratory, 1995.
 
 [1] Zimmerman, T.G., Smith, J.R., Paradiso, J.A., Allport, D.,
 Gershenfeld, N., Applying electric field sensing to human-computer
-interfaces. in CHI '95, 280-287.
+interfaces. in Proceedings of CHI '95, pp. 280-287.
+
+[3] http://www.alab.t.u-tokyo.ac.jp/~shinolab/projects/touchinterfaceonbackofhand/
+
+[4] Sato, M., Poupyrev, I, and Harrison, C. Touché: Enhancing Touch
+Interaction on Humans, Screens, Liquids, and Everyday Objects. In
+Proceedings of CHI'12. 2012.
+
+[5] Christian Holz, Tovi Grossman, George Fitzmaurice, Anne
+Agur. Implanted User Interfaces. In Proceedings of CHI'12.
+pp. 503–512.
 
 </body>
 </html>
