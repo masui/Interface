@@ -1,0 +1,149 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GROVE</title>
+</head>
+<body style="width:500px;">
+
+センサやアクチュエータを活用した実世界インタフェースを実験する方法として、
+Phidgets[1]やArduinoが広く利用されています。
+
+<p>
+Phidgetsのセンサ群はUSB経由でパソコンに直接接続できる点が手軽で良いのですが、
+Phidgets Inc.で販売されているセンサの種類は限られていますし、
+サポートされている言語の数も限られているという問題があります。
+実際、比較的最近までRubyが正式にサポートされていなかったため、
+PhidgetsをRubyから制御するのには苦労したものでした。
+
+また、日本での入手が若干面倒だという問題も存在します。
+
+<p>
+このような理由があるため、
+パソコンから直接センサを利用したい場合でも
+Arduinoのようなマイコンを経由することがよくありました。
+しかし、Arduinoを利用する場合、
+
+<ol>
+<li>センサを扱うArduinoプログラム
+<li>パソコンと通信するArduinoプログラム
+<li>Arduinoと通信するパソコン上のプログラム
+</ol>
+
+のようなプログラムをすべて自前で用意する必要があるので開発が結構面倒ですし、
+隔靴掻痒感が否めないところがありました。
+
+ところが、
+最近はパソコンとマイコンの間で簡単にデータのやりとりを行なうことができる
+Firmata[2]というプロトコルがポピュラーになってきたため、
+この状況が変わりつつあります。
+
+<h2>Firmata</h2>
+
+<!-- Firmata is a generic protocol for communicating with microcontrollers from software on a host computer. -->
+
+Firmataは、Arduinoのようなマイコンとパソコンとの間でデータのやりとりを行なうための単純なプロトコルです。
+Arduino上で
+特定のアナログ端子の入力を読み取ったり
+特定のデジタル端子に出力を行なったりするといった処理を
+パソコンから簡単に指示することができます。
+
+<blockquote>
+<a href="http://firmata.org/wiki/V2.1ProtocolDetails">
+<img src="http://gyazo.com/513ae46b07d8a731cccdbab10ffdac5f.png">
+</a>
+<br>
+Firmataプロトコル[3]
+</blockquote>
+
+たとえばArduinoのアナログ出力ピン1に0x1234という値の出力を行ないたい場合は
+以下のようなデータをパソコンからArduinoに送ります。
+
+<blockquote>
+<code>0xE1 0x34 0x24</code>
+</blockquote>
+
+最初の「0xE1」は「1番ポートへのアナログ出力」を示しており、
+次の2バイトは、
+送りたい値を14ビットで表現したとき(0x1234 = 01001000110100)
+の下位7ビット(0110100)と上位の7ビット(0100100)を表現しています。
+
+<p>
+このプロトコルは、
+パソコンと楽器の間で広く利用されている
+MIDIを流用したものです。
+0xE0〜0xEF は
+シンセサイザなどで音程を調整するためのピッチホイール操作に割り当てられたコードですが、
+Firmataではこれをアナログ出力用に流用しています。
+MIDIではこの他に
+ノートON(鍵盤を押したとき出力されるコード)、
+ノートOFF(鍵盤を離したとき出力されるコード)、
+など多数のコードが定義されていますが、
+FirmataではMIDIで定義されているこのようなコードを
+パソコンとマイコンの間でのデータのやりとりに利用しています。
+
+<p>
+MIDIはこのように単純なプロトコルなので、
+Firmataプロトコルに従ったプログラムを書くことは簡単です。
+
+Arduinoのようなマイコン上でFirmata対応ファームウェアを動かしておけば、
+USB上のシリアル通信を利用して
+パソコンからマイコンに指令を行なったり、
+マイコン上のセンサの値をパソコンで読み取ったりすることが簡単にできるようになります。
+
+つまり、パソコン上でシリアル入出力プログラムを書くだけで
+Phidgetsと同じような感覚でArduinoを介したセンサ入出力を行なうことができることになります。
+
+<h2>GROVE System</h2>
+
+Arduinoにセンサを自分で接続するのは難しくありませんが、
+より簡単にArduinoでセンサを利用できるようにした
+「GROVE System」[4]というセンサ群が
+中国のSeeed Studio[5]から発売されています。
+Phidgets Inc.は傾きセンサやサーボモータなど沢山のセンサやアクチュエータを販売していますが、
+GROVE Systemはガイガーカウンタや雨量計など、
+さらに多くのセンサや出力機器に対応しています。
+GROVE Systemのセンサ群は現在日本で販売されているので入手も簡単です。
+
+<blockquote>
+<img src="http://gyazo.com/9c62a3f126990f801717622c294080a8.png" width=500>
+<br>
+GROVE Systemsのセンサ群
+</blockquote>
+
+パソコンをUSBケーブルでArduinoに接続し、
+Firmataファームウェアを載せたArduinoにGROVE Systemを接続すれば、
+GROVE Systemで提供されている様々なセンサを
+単純なシリアル入出力でパソコンから操作できることになります。
+パソコン上のどんな言語でも簡単なプログラミングでシリアル入出力を行なうことができますから、
+どんな言語からでもArduinoを経由してGROVE Systemセンサをすぐに利用できることになります。
+
+たとえばRubyを利用する場合は、
+Firmataを利用するためのarduino_firmata[6]
+というライブラリが公開されており、
+Phidgetsと同じ感覚でGROVE Systemの多彩なセンサを利用することができます。
+
+
+<p>
+センサの利用は日に日に簡単になっています。
+またインターネットの情報も、それを活用するプログラミング技法も
+大変な勢いで進化しています。
+
+インターネット全体にまたがったハードウェアとソフトウェアを
+自由自在にあやつる「全世界プログラミング」の世界が
+ますます近付いているといえるでしょう。
+
+<hr>
+<p>
+<h3>参考文献</h3>
+
+<ul>
+<li>[1] http://phidgets.com/
+<li>[2] http://firmata.org/
+<li>[3] http://firmata.org/wiki/V2.1ProtocolDetails
+<li>[4] http://www.seeedstudio.com/wiki/GROVE_System
+<li>[5] http://www.seeedstudio.com/
+<li>[6] http://shokai.github.com/arduino_firmata/
+</ul>
+
+</body>
+</html>
